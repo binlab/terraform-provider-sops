@@ -2,7 +2,7 @@
 
 A Terraform plugin for using files encrypted with [Mozilla sops](https://github.com/mozilla/sops).
 
-**NOTE:** To prevent plaintext secrets from being written to disk, you *must* set up a secure remote state backend. See the [official docs](https://developer.hashicorp.com/terraform/language/state/sensitive-data) on _Sensitive Data in State_ for more information or use [ephemeral block](#example-using-ephemeral-block).
+**NOTE:** To prevent plaintext secrets from being written to disk, you _must_ set up a secure remote state backend. See the [official docs](https://developer.hashicorp.com/terraform/language/state/sensitive-data) on _Sensitive Data in State_ for more information or use [ephemeral block](#example-using-ephemeral-block).
 
 ## Example
 
@@ -13,16 +13,17 @@ Encrypt a file using Sops: `sops demo-secret.enc.json`
 ```json
 {
   "password": "foo",
-  "db": {"password": "bar"}
+  "db": { "password": "bar" }
 }
 ```
+
 ### sops_file
 
 ```hcl
 terraform {
   required_providers {
     sops = {
-      source = "carlpett/sops"
+      source = "binlab/sops"
       version = "~> 0.5"
     }
   }
@@ -62,7 +63,8 @@ output "do-something" {
 ```
 
 ### sops_external
-For use with reading files that might not be local. 
+
+For use with reading files that might not be local.
 
 > `input_type` is required with this data source.
 
@@ -70,7 +72,7 @@ For use with reading files that might not be local.
 terraform {
   required_providers {
     sops = {
-      source = "carlpett/sops"
+      source = "binlab/sops"
       version = "~> 0.5"
     }
   }
@@ -104,7 +106,7 @@ For Terraform 0.13 and later, specify the source and version in a `required_prov
 terraform {
   required_providers {
     sops = {
-      source = "carlpett/sops"
+      source = "binlab/sops"
       version = "~> 0.5"
     }
   }
@@ -113,35 +115,38 @@ terraform {
 
 ## CI usage
 
-For CI, the same variables or context that SOPS uses locally must be provided in the runtime. The provider does not manage the required values. 
+For CI, the same variables or context that SOPS uses locally must be provided in the runtime. The provider does not manage the required values.
 
 ## Development
+
 Building and testing is most easily performed with `make build` and `make test` respectively.
 
 The PGP key used for encrypting the test cases is found in `test/testing-key.pgp`. You can import it with `gpg --import test/testing-key.pgp`.
 
 ## Transitioning to Terraform 0.13 provider required blocks.
 
-With Terraform 0.13, providers are available/downloaded via the [terraform registry](https://registry.terraform.io/providers/carlpett/sops/latest) via a required_providers block.
+With Terraform 0.13, providers are available/downloaded via the [terraform registry](https://registry.terraform.io/providers/binlab/sops/latest) via a required_providers block.
 
 ```hcl
 terraform {
   required_providers {
     sops = {
-      source = "carlpett/sops"
+      source = "binlab/sops"
       version = "~> 0.5"
     }
   }
 }
 ```
 
-A prerequisite when converting is that you must remove the data source block from the previous SOPS provider in your `terraform.state` file. 
+A prerequisite when converting is that you must remove the data source block from the previous SOPS provider in your `terraform.state` file.
 This can be done via:
+
 ```shell
-terraform state replace-provider registry.terraform.io/-/sops registry.terraform.io/carlpett/sops
+terraform state replace-provider registry.terraform.io/-/sops registry.terraform.io/binlab/sops
 ```
 
-If not you will be greeted with: 
+If not you will be greeted with:
+
 ```shell
 - Finding latest version of -/sops...
 
@@ -153,14 +158,16 @@ registry.terraform.io/-/sops
 ```
 
 ## Example using ephemeral block
+
 With Terraform v1.11+ and the SOPS provider v1.3.0+, you can use an ephemeral resource instead of a data source.
 This prevents the contents of the secret file from being saved in the Terraform state.
 Ephemeral resources can be referenced in `write-only` arguments.
+
 ```hcl
 terraform {
   required_providers {
     sops = {
-      source = "carlpett/sops"
+      source = "binlab/sops"
       version = "~> 1.3.0"
     }
   }
@@ -177,8 +184,8 @@ resource "aws_ssm_parameter" "sops_secrets" {
   value_wo_version = 1
 }
 ```
+
 See documentation:
-* [Ephemeral block](https://developer.hashicorp.com/terraform/language/block/ephemeral)
-* [Write-Only arguments](https://developer.hashicorp.com/terraform/language/manage-sensitive-data/write-only)
 
-
+- [Ephemeral block](https://developer.hashicorp.com/terraform/language/block/ephemeral)
+- [Write-Only arguments](https://developer.hashicorp.com/terraform/language/manage-sensitive-data/write-only)
