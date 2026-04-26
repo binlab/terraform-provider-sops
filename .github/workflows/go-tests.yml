@@ -1,0 +1,42 @@
+name: 🧪 Run Tests
+
+on:
+  push:
+    branches:
+      - master
+      - release
+  pull_request:
+    branches:
+      - "**"
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  run-tests:
+    if: github.event.pull_request.draft == false
+    name: 🧩 Integration
+    uses: binlab/github-toolbox/.github/workflows/go-tests.yml@main
+    with:
+      pre_test_script: |
+        echo "Importing local GPG key for tests..."
+        gpg --import test/testing-key.pgp
+
+      test_matrix: >-
+        [
+          {"terraform": "1.12.x"},
+          {"terraform": "1.13.x"},
+          {"terraform": "1.14.x", "coverage":true},
+          {"opentofu": "1.10.x"},
+          {"opentofu": "1.11.x"}
+        ]
+      tofu_skip_regex: "TestEphemeral.*"
+      octocov_enabled: true
+
+    secrets: inherit

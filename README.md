@@ -1,5 +1,31 @@
 # terraform-sops
 
+[![🔄 Upstream Sync](https://github.com/binlab/terraform-provider-sops/actions/workflows/upstream-sync.yml/badge.svg)](https://github.com/binlab/terraform-provider-sops/actions/workflows/upstream-sync.yml)
+[![🔀 Fork Releaser](https://github.com/binlab/terraform-provider-sops/actions/workflows/fork-releaser.yml/badge.svg)](https://github.com/binlab/terraform-provider-sops/actions/workflows/fork-releaser.yml)
+[![🧪 Run Tests](https://github.com/binlab/terraform-provider-sops/actions/workflows/go-tests.yml/badge.svg)](https://github.com/binlab/terraform-provider-sops/actions/workflows/go-tests.yml)
+[![Latest Release](https://img.shields.io/github/v/release/binlab/terraform-provider-sops?style=flat&color=31c653)](https://github.com/binlab/terraform-provider-sops/releases/latest)
+[![Codecov](https://codecov.io/github/binlab/terraform-provider-sops/branch/release/graph/badge.svg)](https://codecov.io/github/binlab/terraform-provider-sops)
+
+> [!NOTE]
+> This is a maintained fork of the `carlpett/terraform-provider-sops` provider.
+> This fork is actively maintained to provide critical enhancements and features
+> that are currently missing or unaddressed in the upstream repository.
+>
+> **Key Enhancements:**
+>
+> - **Resource-Level Environment Variables** (see
+>   [Issue #146](https://github.com/carlpett/terraform-provider-sops/issues/146),
+>   pending [PR #145](https://github.com/carlpett/terraform-provider-sops/pull/145),
+>   or the [feat/add-env-configuration](https://github.com/binlab/terraform-provider-sops/tree/feat/add-env-configuration)
+>   branch):
+>   Added support for passing environment variables directly at the resource
+>   level before invoking the SOPS library. This resolves limitations related
+>   to dynamic or per-resource secret configuration that occur when variables
+>   are restricted to the global provider block. Detailed explanations and
+>   working examples can be found in the
+>   [binlab/examples-provider-sops](https://github.com/binlab/examples-provider-sops)
+>   repository.
+
 A Terraform plugin for using files encrypted with [SOPS](https://github.com/getsops/sops).
 
 **NOTE:** To prevent plaintext secrets from being written to disk, you *must* set up a secure remote state backend. See the [official docs](https://developer.hashicorp.com/terraform/language/state/sensitive-data) on _Sensitive Data in State_ for more information or use [ephemeral block](#example-using-ephemeral-block).
@@ -22,7 +48,7 @@ Encrypt a file using Sops: `sops demo-secret.enc.json`
 terraform {
   required_providers {
     sops = {
-      source = "carlpett/sops"
+      source = "binlab/sops"
       version = "~> 0.5"
     }
   }
@@ -70,7 +96,7 @@ For use with reading files that might not be local.
 terraform {
   required_providers {
     sops = {
-      source = "carlpett/sops"
+      source = "binlab/sops"
       version = "~> 0.5"
     }
   }
@@ -104,7 +130,7 @@ For Terraform 0.13 and later, specify the source and version in a `required_prov
 terraform {
   required_providers {
     sops = {
-      source = "carlpett/sops"
+      source = "binlab/sops"
       version = "~> 0.5"
     }
   }
@@ -124,13 +150,13 @@ To create the Terraform-registry-documentation, simply run `make generate-docume
 
 ## Transitioning to Terraform 0.13 provider required blocks.
 
-With Terraform 0.13, providers are available/downloaded via the [terraform registry](https://registry.terraform.io/providers/carlpett/sops/latest) via a required_providers block.
+With Terraform 0.13, providers are available/downloaded via the [terraform registry](https://registry.terraform.io/providers/binlab/sops/latest) via a required_providers block.
 
 ```hcl
 terraform {
   required_providers {
     sops = {
-      source = "carlpett/sops"
+      source = "binlab/sops"
       version = "~> 0.5"
     }
   }
@@ -140,7 +166,7 @@ terraform {
 A prerequisite when converting is that you must remove the data source block from the previous SOPS provider in your `terraform.state` file. 
 This can be done via:
 ```shell
-terraform state replace-provider registry.terraform.io/-/sops registry.terraform.io/carlpett/sops
+terraform state replace-provider registry.terraform.io/-/sops registry.terraform.io/binlab/sops
 ```
 
 If not you will be greeted with: 
@@ -162,7 +188,7 @@ Ephemeral resources can be referenced in `write-only` arguments.
 terraform {
   required_providers {
     sops = {
-      source = "carlpett/sops"
+      source = "binlab/sops"
       version = "~> 1.3.0"
     }
   }
