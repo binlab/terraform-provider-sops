@@ -9,6 +9,25 @@ description: |-
 
 A Terraform plugin for using files encrypted with [SOPS](https://github.com/getsops/sops).
 
+-> **Note:** This is a maintained fork of the [carlpett/terraform-provider-sops](https://github.com/carlpett/terraform-provider-sops) provider.
+This fork is actively maintained to provide critical enhancements and features
+that are currently missing or unaddressed in the upstream repository.
+
+> **Key Enhancements:**
+>
+> - **Resource-Level Environment Variables** (see
+>   [Issue #146](https://github.com/carlpett/terraform-provider-sops/issues/146),
+>   pending [PR #145](https://github.com/carlpett/terraform-provider-sops/pull/145),
+>   or the [feat/add-env-configuration](https://github.com/binlab/terraform-provider-sops/tree/feat/add-env-configuration)
+>   branch):
+>   Added support for passing environment variables directly at the resource
+>   level before invoking the SOPS library. This resolves limitations related
+>   to dynamic or per-resource secret configuration that occur when variables
+>   are restricted to the global provider block. Detailed explanations and
+>   working examples can be found in the
+>   [binlab/examples-provider-sops](https://github.com/binlab/examples-provider-sops)
+>   repository.
+
 !> To prevent plaintext secrets from being written to disk, you *must* use a secure remote state backend. See the [official docs](https://developer.hashicorp.com/terraform/language/state/sensitive-data) on _Sensitive Data in State_ for more information.
 
 ## Example Usage
